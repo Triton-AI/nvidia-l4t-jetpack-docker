@@ -1,4 +1,4 @@
-# Jetpack L4T Iron Docker Image for Ubuntu 22.04
+# Jetpack L4T Iron Docker Image with Ubuntu 22.04
 
 This Docker image works with Jetson Xavier Devices running Jetpack 5.1.2 and comes with ROS2 Iron on Ubuntu 22.04.
 
