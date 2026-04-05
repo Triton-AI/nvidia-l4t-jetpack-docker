@@ -1,4 +1,4 @@
-FROM nvcr.io/nvidia/l4t-jetpack:r35.4.1
+FROM nvcr.io/nvidia/l4t-jetpack:r36.4.0
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -22,16 +22,17 @@ RUN apt update && \
     rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
-RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
-
-RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null
+RUN apt update && apt install curl -y && \
+    export ROS_APT_SOURCE_VERSION=$(curl -s https://api.github.com/repos/ros-infrastructure/ros-apt-source/releases/latest | grep -F "tag_name" | awk -F'"' '{print $4}') && \
+    curl -L -o /tmp/ros2-apt-source.deb "https://github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-apt-source_${ROS_APT_SOURCE_VERSION}.$(. /etc/os-release && echo ${UBUNTU_CODENAME:-${VERSION_CODENAME}})_all.deb" && \
+    dpkg -i /tmp/ros2-apt-source.deb
 
 RUN apt update && \ 
-    apt install -y ros-dev-tools ros-iron-desktop && \
+    apt install -y ros-dev-tools ros-jazzy-desktop && \
     rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
-RUN echo "source /opt/ros/iron/setup.bash" >> /etc/bash.bashrc
+RUN echo "source /opt/ros/jazzy/setup.bash" >> /etc/bash.bashrc
 
 RUN apt update && apt install -y \
     ca-certificates \
