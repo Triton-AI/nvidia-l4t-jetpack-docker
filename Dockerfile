@@ -28,7 +28,12 @@ RUN apt update && apt install curl -y && \
     dpkg -i /tmp/ros2-apt-source.deb
 
 RUN apt update && \ 
-    apt install -y ros-dev-tools ros-jazzy-desktop && \
+    apt install -y \
+    ros-dev-tools \
+    ros-jazzy-desktop-full \
+    ros-jazzy-rmw-cyclonedds-cpp \
+    ros-jazzy-rmw-zenoh-cpp && \
+    rosdep init && \
     rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
